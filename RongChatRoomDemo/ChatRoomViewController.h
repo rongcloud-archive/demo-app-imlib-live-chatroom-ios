@@ -70,7 +70,7 @@
 
 #pragma mark - 输入工具栏
 
-@property(nonatomic,strong) RCTKInputBarControl *inputBar;
+@property(nonatomic,strong) RCInputBarControl *inputBar;
 
 #pragma mark - 显示设置
 /*!

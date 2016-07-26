@@ -21,8 +21,8 @@
 #import <RongIMLib/RongIMLib.h>
 #import <objc/runtime.h>
 #import <RongIMToolKit/RongIMToolKit.h>
-#import <RongIMToolKit/RCTKInputBarControl.h>
-#import <RongIMToolKit/RCTKInputBarTheme.h>
+#import <RongIMToolKit/RCInputBarControl.h>
+#import <RongIMToolKit/RCInputBarTheme.h>
 #import "RCTipMessageCell.h"
 #import "MBProgressHUD.h"
 #import "UCLOUDLivePlaying.h"
@@ -37,7 +37,7 @@
 @interface ChatRoomViewController () <
 UICollectionViewDelegate, UICollectionViewDataSource,
 UICollectionViewDelegateFlowLayout, RCMessageCellDelegate, UIGestureRecognizerDelegate,
-UIScrollViewDelegate, UINavigationControllerDelegate,RCTKInputBarControlDelegate,RCConnectionStatusChangeDelegate>
+UIScrollViewDelegate, UINavigationControllerDelegate,RCInputBarControlDelegate,RCConnectionStatusChangeDelegate>
 
 @property(nonatomic, strong)RCCollectionViewHeader *collectionViewHeader;
 
@@ -343,7 +343,7 @@ static NSString *const rcGiftMessageCellIndentifier = @"rcGiftMessageCellIndenti
         float inputBarOriginX = self.conversationMessageCollectionView.frame.origin.x;
         float inputBarSizeWidth = self.conversationMessageCollectionView.frame.size.width;
         float inputBarSizeHeight = MinHeight_InputView;
-        self.inputBar = [[RCTKInputBarControl alloc]initWithFrame:CGRectMake(inputBarOriginX, inputBarOriginY,inputBarSizeWidth,inputBarSizeHeight)
+        self.inputBar = [[RCInputBarControl alloc]initWithFrame:CGRectMake(inputBarOriginX, inputBarOriginY,inputBarSizeWidth,inputBarSizeHeight)
                                                 inViewConroller:self];
         self.inputBar.delegate = self;
         self.inputBar.backgroundColor = [UIColor clearColor];
