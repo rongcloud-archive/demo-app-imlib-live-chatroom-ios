@@ -2,7 +2,6 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "app_512x512.png",
       "scale" : "1x"
     },
     {

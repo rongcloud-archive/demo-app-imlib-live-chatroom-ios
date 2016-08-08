@@ -7,13 +7,13 @@
 //
 
 #import "KSYLivePlaying.h"
-//#import <KSYMediaPlayer/KSYMediaPlayer.h>
+#import <KSYMediaPlayer/KSYMediaPlayer.h>
 #import <CommonCrypto/CommonDigest.h>
 
 @interface KSYLivePlaying ()
 
 @property (nonatomic, strong) NSString *currentMediaURL;
-//@property (nonatomic, strong) KSYMoviePlayerController *player;
+@property (nonatomic, strong) KSYMoviePlayerController *player;
 
 @end
 
@@ -26,17 +26,17 @@
         self.currentMediaURL = mediaURL;
         NSString *urlStr =[NSString stringWithFormat:@"%@", mediaURL];
         NSURL *url = [NSURL URLWithString:urlStr];
-//        self.player = [[KSYMoviePlayerController alloc] initWithContentURL:url];
-//        self.player.scalingMode = MPMovieScalingModeAspectFill;
+        self.player = [[KSYMoviePlayerController alloc] initWithContentURL:url];
+        self.player.scalingMode = MPMovieScalingModeAspectFill;
     }
     return self;
 }
 
 - (void)initKSYAuth {
-//    NSString *time = [NSString stringWithFormat:@"%d",(int)[[NSDate date]timeIntervalSince1970]];
-//    NSString *sk = [NSString stringWithFormat:@"sff25dc4a428479ff1e20ebf225d113%@", time];
-//    NSString *sksign = [self MD5:sk];
-//    [[KSYPlayerAuth sharedInstance]setAuthInfo:@"QYA0EEF0FDDD38C79913" accessKey:@"abc73bb5ab2328517415f8f52cd5ad37" secretKeySign:sksign timeSeconds:time];
+    NSString *time = [NSString stringWithFormat:@"%d",(int)[[NSDate date]timeIntervalSince1970]];
+    NSString *sk = [NSString stringWithFormat:@"sff25dc4a428479ff1e20ebf225d113%@", time];
+    NSString *sksign = [self MD5:sk];
+    [[KSYPlayerAuth sharedInstance]setAuthInfo:@"QYA0EEF0FDDD38C79913" accessKey:@"abc73bb5ab2328517415f8f52cd5ad37" secretKeySign:sksign timeSeconds:time];
 }
 
 - (NSString *)MD5:(NSString*)raw {
@@ -53,24 +53,24 @@
 }
 
 - (void)startPlaying {
-//    [self.player prepareToPlay];
-//    [self.player play];
+    [self.player prepareToPlay];
+    [self.player play];
 }
 
 - (void)pausePlaying {
-//    [self.player pause];
+    [self.player pause];
 }
 
 - (void)resumePlaying {
-//    [self.player play];
+    [self.player play];
 }
 
 - (void)destroyPlaying {
-//    [self.player stop];
+    [self.player stop];
 }
 
-//- (UIView *)currentLiveView {
-//    return self.player.view;
-//}
+- (UIView *)currentLiveView {
+    return self.player.view;
+}
 
 @end
