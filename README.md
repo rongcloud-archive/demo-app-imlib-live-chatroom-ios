@@ -49,28 +49,28 @@
 
 ## 融云 IM 是如何运转、如何与 App 交互的
 
-使用融云IM聊天室之前，必须要先初始化SDK并建立与融云服务器的连接。
+使用融云IM聊天室之前，必须要先初始化 SDK 并建立与融云服务器的连接。
 ![](./image/sdk_connect.png)
 
 connect成功之后，融云提供两种加入聊天室的方式。
 
-1. App Server创建聊天室，客户端调用joinExistChatRoom加入聊天室。
+1. App Server 创建聊天室，客户端调用 joinExistChatRoom 加入聊天室。
 ![](./image/joinExistChatRoom.png)
 
-2. App Server只管理聊天室Id列表，客户端调用joinChatRoom加入聊天室，如果聊天室不存在则自动创建。
+2. App Server 只管理聊天室 Id 列表，客户端调用 joinChatRoom 加入聊天室，如果聊天室不存在则自动创建。
 ![](./image/joinChatRoom.png)
 
 > 融云 Sever API 也提供了将用户加入聊天室的接口，但是不要通过此接口将普通用户加入聊天室中，否则会导致聊天室自动保活的功能失效。
-> 一些记录功能的账号可以通过 Server API /chatroom/join 接口加入聊天室，但是普通用户需要调用 SDK 的 joinExistChatRoom或joinExistChatRoom 加入聊天室。
+> 一些记录功能的账号可以通过 Server API /chatroom/join 接口加入聊天室，但是普通用户需要调用 SDK 的 joinExistChatRoom 或 joinExistChatRoom 加入聊天室。
 
 ### App 服务器端需要做什么？
-* 管理用户体系和融云userId的映射关系
-	> 融云不维护用户体系和好友关系，App需要为您用户体系中的每个用户和融云的userId建立一一对应的映射关系。之后就可以根据userId，加入、退出聊天室并收发消息。
+* 管理用户体系和融云 userId 的映射关系
+	> 融云不维护用户体系和好友关系，App 需要为您用户体系中的每个用户和融云的 userId 建立一一对应的映射关系。之后就可以根据 userId，加入、退出聊天室并收发消息。
 	
-* 实现从融云获取token的逻辑
-* 根据App的产品逻辑，维护每个聊天室的信息和聊天室列表
+* 实现从融云获取 token 的逻辑
+* 根据 App 的产品逻辑，维护每个聊天室的信息和聊天室列表
 
-### App服务器还可以做什么？
+### App 服务器还可以做什么？
 * 创建、销毁聊天室
 * 查询聊天室的信息
 * 查询聊天室中的用户列表
@@ -79,19 +79,19 @@ connect成功之后，融云提供两种加入聊天室的方式。
 * 消息分级
 * 全球节点
 
-### App客户端需要做什么?
-* 初始化SDK
+### App 客户端需要做什么?
+* 初始化 SDK
 * 加入、退出聊天室
 * 初始化视频播放器（多家合作厂家可选）
 * 收发消息
 * 文字、表情、点赞、鲜花等编辑、显示
-> 其中，App以上部分的功能和UI都已经实现并开源，可以开箱即用也可以随意定制。
+> 其中，App 以上部分的功能和UI都已经实现并开源，可以开箱即用也可以随意定制。
 
 ### App客户端还可以做什么？
 * 自定义任意消息及其显示样式（也可以不显示）
 * 插入而不发送消息
-* 监听消息收发，App可以按自己需求控制逻辑和UI
-* 后期可以很方便地集成IMKit，快速扩展出单聊、群聊、黑名单、客服、VoIP等功能。
+* 监听消息收发，App 可以按自己需求控制逻辑和 UI
+* 后期可以很方便地集成 IMKit，快速扩展出单聊、群聊、黑名单、客服、VoIP 等功能。
 
 ## iOS直播聊天室 Demo 说明
 * 源码结构
@@ -159,12 +159,12 @@ connect成功之后，融云提供两种加入聊天室的方式。
 ## 聊天室集成指南
 
 ### 集成SDK
-融云开源的直播聊天室基于IMLib实现，有两种方式可以将SDK导入您的项目中。
+融云开源的直播聊天室基于 IMLib 实现，有两种方式可以将SDK导入您的项目中。
 
-* 通过CocoaPods管理依赖
-* 手动导入SDK并管理依赖
+* 通过 CocoaPods 管理依赖
+* 手动导入 SDK 并管理依赖
 	
-> CocoaPods是目前最流行的Cocoa项目库依赖管理工具之一，考虑到便捷与项目的可维护性，我们更推荐您使用CocoaPods导入并管理SDK。
+> CocoaPods 是目前最流行的 Cocoa 项目库依赖管理工具之一，考虑到便捷与项目的可维护性，我们更推荐您使用 CocoaPods 导入并管理 SDK。
 
 #### 使用 CocoaPods 导入 SDK
 1. CocoaPods 安装
@@ -177,7 +177,7 @@ connect成功之后，融云提供两种加入聊天室的方式。
 		sudo gem install cocoapods
 	```
 	
-	如果您的网络不能翻墙，可以通过淘宝的 RubyGems镜像 进行安装。
+	如果您的网络不能翻墙，可以通过淘宝的 RubyGems 镜像 进行安装。
 	
 	在终端依次运行以下命令：
 	
@@ -204,17 +204,17 @@ connect成功之后，融云提供两种加入聊天室的方式。
 	
 	您可以看到，融云在 CocoaPods 上提供了三种 SDK 下载，IMLib、不包含VoIP功能的 IMKit、包含 VoIP 功能的 IMKit。
 	
-	直播聊天室Demo使用IMlib。
+	直播聊天室 Demo 使用 IMlib。
 	
 3. 使用 CocoaPods 导入融云 SDK
 
-	打开终端，进入到您的工程目录，执行以下命令，会自动生成一个Podfile文件。
+	打开终端，进入到您的工程目录，执行以下命令，会自动生成一个 Podfile 文件。
 	
 	```shell
 		pod init
 	```
 	
-	打开Podfile，在您项目的target下加入以下内容。（在此以2.4.0版本为例）
+	打开 Podfile，在您项目的 target 下加入以下内容。（在此以2.4.0版本为例）
 	
 	```
 		pod 'RongCloudIMLib', '2.4.0'
@@ -234,11 +234,11 @@ connect成功之后，融云提供两种加入聊天室的方式。
 	
 	融云 SDK 在 iOS9 上需要使用 http，您需要设置在 App 中使用 http。
 	
-	1. 在 App 的 Info.plist 中添加 NSAppTransportSecurity 类型Dictionary。
+	1. 在 App 的 Info.plist 中添加 NSAppTransportSecurity 类型 Dictionary。
 	2. 在 NSAppTransportSecurity 下添加 NSAllowsArbitraryLoads 类型 Boolean，值设为 YES。
 
 ##### CocoaPods 使用说明
-* 指定SDK版本
+* 指定 SDK 版本
 	CocoaPods 中，有几种设置 SDK 版本的方法。如：
 	* '>= 2.4.X' 会根据您本地的 CocoaPods 源列表，导入不低于 2.4.X 版本的 SDK。
 	* '~> 2.4.X' 会根据您本地的 CocoaPods 源列表，介于 2.4.X~2.5.0 之前版本的 SDK。
@@ -249,9 +249,9 @@ connect成功之后，融云提供两种加入聊天室的方式。
 		pod 'RongCloudIMKit', '2.4.X'
 	```
 	
-* 升级本地CocoaPods源
+* 升级本地 CocoaPods 源
 
-	CocoaPods有一个中心化的源，默认本地会缓存CocoaPods源服务器上的所有SDK版本。
+	CocoaPods 有一个中心化的源，默认本地会缓存 CocoaPods 源服务器上的所有 SDK 版本。
 	
 	如果搜索的时候没有搜到融云的 SDK 或者搜不到最新的 SDK 版本，可以执行以下命令更新一下本地的缓存。
 	
@@ -259,7 +259,7 @@ connect成功之后，融云提供两种加入聊天室的方式。
 		pod repo update
 	```
 	
-* 升级工程的SDK版本
+* 升级工程的 SDK 版本
 
 	更新您工程目录中 Podfile 指定的 SDK 版本后，在终端中执行以下命令。
 	
@@ -267,7 +267,7 @@ connect成功之后，融云提供两种加入聊天室的方式。
 		pod update
 	```
 	
-* 清楚Cocoapods本地缓存
+* 清除 Cocoapods 本地缓存
 
 	特殊情况下，由于网络或者别的原因，通过 CocoaPods 下载的文件可能会有问题。
 	
@@ -279,12 +279,12 @@ connect成功之后，融云提供两种加入聊天室的方式。
 	
 	> 关于 CocoaPods 的更多内容，您可以参考 [CocoaPods 文档](https://cocoapods.org/)
 
-#### 手动导入SDK
-1. 下载SDK
+#### 手动导入 SDK
+1. 下载 SDK
 
 	您可以到 [融云官方网站](http://www.rongcloud.cn/downloads) 下载融云 SDK。
 	
-2. 导入SDK
+2. 导入 SDK
 
 	SDK 文件说明
 	
@@ -333,7 +333,7 @@ connect成功之后，融云提供两种加入聊天室的方式。
 	
 	融云 SDK 在 iOS9 上需要使用 http，您需要设置在 App 中使用 http。
 	
-	1. 在 App 的 Info.plist 中添加 NSAppTransportSecurity 类型Dictionary。
+	1. 在 App 的 Info.plist 中添加 NSAppTransportSecurity 类型 Dictionary。
 	2. 在 NSAppTransportSecurity 下添加 NSAllowsArbitraryLoads 类型 Boolean，值设为 YES。
 	
 5. 查看当前使用的 SDK 版本
@@ -414,12 +414,12 @@ SDK 针对 iOS 的前后台和各种网络状况，进行了连接和重连机�
 ### 加入聊天室
 用户需要加入聊天室之后，才能在聊天室里面接收和发送消息。
 
-SDK提供了两个加入聊天室的接口：
+SDK 提供了两个加入聊天室的接口：
 
 1. 只加入已经存在的聊天室，如果聊天室不存在则失败
 2. 加入聊天室，如果聊天室不存在，会自动创建并加入聊天室
 
-您可以根据您的App逻辑选择使用。
+您可以根据您的 App 逻辑选择使用。
 
 ```objc
 	// RCIMClient Class
@@ -489,9 +489,9 @@ SDK提供了两个加入聊天室的接口：
 ### 发送消息
 加入了聊天室之后，就可以发送消息。
 
-SDK提供以下接口，用于发送文本、语音、自定义等消息。
+SDK 提供以下接口，用于发送文本、语音、自定义等消息。
 
-如果您是在聊天室中发送消息，则conversationType设置为ConversationType_CHATROOM，pushContent和pushData可以设置为nil（因为聊天室没有消息推送）。
+如果您是在聊天室中发送消息，则 conversationType 设置为 ConversationType_CHATROOM，pushContent 和 pushData 可以设置为 nil（因为聊天室没有消息推送）。
 
 ```objc
 	// RCIMClient Class
@@ -531,9 +531,9 @@ SDK提供以下接口，用于发送文本、语音、自定义等消息。
 	                                     long messageId))errorBlock;
 ```
 
-SDK还提供以下接口，用于发送图片消息。
+SDK 还提供以下接口，用于发送图片消息。
 
-如果您是在聊天室中发送图片消息，则conversationType设置为ConversationType_CHATROOM，pushContent和pushData可以设置为nil（因为聊天室没有消息推送）。
+如果您是在聊天室中发送图片消息，则 conversationType 设置为 ConversationType_CHATROOM，pushContent 和pushData 可以设置为 nil（因为聊天室没有消息推送）。
 
 ```objc
 	// RCIMClient Class
@@ -579,7 +579,7 @@ SDK还提供以下接口，用于发送图片消息。
 ```
 
 ### 监听消息接收
-SDK提供消息接收的监听接口。
+SDK 提供消息接收的监听接口。
 
 ```objc
 	// RCIMClient Class
@@ -640,11 +640,11 @@ SDK提供消息接收的监听接口。
 	@end
 ```
 
-> 因为融云IM服务支持一个用户同时加入多个聊天室，所以您监听到消息接收的时候，按您App的逻辑处理和显示消息的时候，需要判断targetId以区分是哪个聊天室。
-> 如果您设置了消息接收的监听，需要在该监听对象销毁的时候设置为nil释放监听。
+> 因为融云IM服务支持一个用户同时加入多个聊天室，所以您监听到消息接收的时候，按您 App 的逻辑处理和显示消息的时候，需要判断 targetId 以区分是哪个聊天室。
+> 如果您设置了消息接收的监听，需要在该监听对象销毁的时候设置为 nil 释放监听。
 
 ### 插入消息
-SDK提供插入消息的接口，可以实现界面上和发送的消息效果一样，但是没有真正发送出去的效果。
+SDK 提供插入消息的接口，可以实现界面上和发送的消息效果一样，但是没有真正发送出去的效果。
 
 ```objc
 	// RCIMClient Class
@@ -669,9 +669,9 @@ SDK提供插入消息的接口，可以实现界面上和发送的消息效果�
 ```
 
 ### 删除消息
-SDK提供了两种删除消息的接口。
+SDK 提供了两种删除消息的接口。
 
-1. 删除指定MessageId的一系列消息
+1. 删除指定 MessageId 的一系列消息
 2. 删除某个会话（聊天室）中的所有消息
 
 ```objc
@@ -697,13 +697,13 @@ SDK提供了两种删除消息的接口。
 ```
 
 ### 用户信息显示
-融云IM不管理App的用户体系和好友关系，只要有一个合法的UserId就可以收发消息。
+融云IM不管理 App 的用户体系和好友关系，只要有一个合法的 UserId 就可以收发消息。
 
-当界面上需要显示用户信息（名字、头像）的时候，App需要根据userId在自己的用户体系中查到对应的用户信息并显示。
+当界面上需要显示用户信息（名字、头像）的时候，App 需要根据 userId 在自己的用户体系中查到对应的用户信息并显示。
 
-SDK中针对聊天室的IM场景，在消息内容中设计了senderUserInfo字段。
+SDK 中针对聊天室的IM场景，在消息内容中设计了 senderUserInfo 字段。
 
-App可以在发送消息的时候，携带发送者自己的用户信息（名字、头像），接收方在收到消息的时候可以根据此字段的信息进行UI展示。
+App 可以在发送消息的时候，携带发送者自己的用户信息（名字、头像），接收方在收到消息的时候可以根据此字段的信息进行UI展示。
 
 ```objc
 	// RCMessageContent Class
@@ -717,9 +717,9 @@ App可以在发送消息的时候，携带发送者自己的用户信息（名�
 	@property(nonatomic, strong) RCUserInfo *senderUserInfo;
 ```
 
-我们建议，如果您App只使用聊天室功能，则可以通过senderUserInfo传递并显示用户信息。
+我们建议，如果您 App 只使用聊天室功能，则可以通过 senderUserInfo 传递并显示用户信息。
 
-如果您以后需要集成IMKit来扩展更多功能，则还需要实现用户信息提供者和群组信息提供者等协议，更多内容可以参考[iOS IMKit 开发指南](http://www.rongcloud.cn/docs/ios.html#用户信息与群组信息显示)。
+如果您以后需要集成 IMKit 来扩展更多功能，则还需要实现用户信息提供者和群组信息提供者等协议，更多内容可以参考[iOS IMKit 开发指南](http://www.rongcloud.cn/docs/ios.html#用户信息与群组信息显示)。
 
 ### 连接状态监听
 SDK 提供了自动重连功能，只要调用一次 connectWithToken，之后无论是网络出现异常或者 App 有前后台的切换等，SDK 都会负责自动重连。 
@@ -829,15 +829,15 @@ SDK还提供了连接状态监听的接口。
 ```
 
 ### 自定义消息
-如果SDK预置的消息类型不能满足您的需求，App可以自定义任意类型和数据结构的消息来满足您的业务需求。
+如果 SDK 预置的消息类型不能满足您的需求，App 可以自定义任意类型和数据结构的消息来满足您的业务需求。
 
 自定义消息需要实现以下几部分内容：
 
-1. 继承RCMessageContent并实现消息的编解码、存储等协议（必须）
-2. 向SDK中注册该类型的消息（必须）
-3. App中该类型消息的处理和UI显示（可选）
+1. 继承 RCMessageContent 并实现消息的编解码、存储等协议（必须）
+2. 向 SDK 中注册该类型的消息（必须）
+3. App 中该类型消息的处理和UI显示（可选）
 
-#### 1. 继承RCMessageContent并实现消息的编解码、存储等协议
+#### 1. 继承 RCMessageContent 并实现消息的编解码、存储等协议
 
 RCMessageContent 是消息内容类，是所有消息的基类。您可以继承此类，并实现其中的协议，来实现自定义消息。
 
@@ -852,7 +852,7 @@ RCMessageContent 主要有三个协议：
 RCMessagePersistentCompatible 用于确定消息内容的存储策略，需要指明此消息类型在本地是否存储、是否计入未读消息数。
 > 我们建议，一般不需要显示的命令类的消息，可以设置为不存储不计数的。
 
-RCMessageContentView 用于在会话列表和本地通知中显示消息的摘要，主要用于IMKit中的UI显示，如果您没有集成IMKit的计划，可选。
+RCMessageContentView 用于在会话列表和本地通知中显示消息的摘要，主要用于IMKit中的UI显示，如果您没有集成 IMKit 的计划，可选。
 
 * 自定义消息发送流程
 1. ![](./image/message_send.png)
@@ -952,7 +952,7 @@ RCMessageContentView 用于在会话列表和本地通知中显示消息的摘�
 ```
 
 #### 2. 向SDK中注册该类型的消息
-您需要在初始化SDK之后，向SDK注册该类型的消息。自定义消息只有注册了，SDK才能识别和编解码这种类型的消息。
+您需要在初始化 SDK 之后，向 SDK 注册该类型的消息。自定义消息只有注册了，SDK 才能识别和编解码这种类型的消息。
 
 ```objc
 	// RCIMClient Class
@@ -971,13 +971,13 @@ RCMessageContentView 用于在会话列表和本地通知中显示消息的摘�
 	- (void)registerMessageType:(Class)messageClass;
 ```
 
-#### 3. App中该类型消息的处理和UI显示
-以上步骤都实现之后，App已经可以正常收发自定义消息了。
-这时候，App可能需要按照自己的业务逻辑，做好这种消息的UI显示和处理工作。
-这部分是可选的，完全取决于App的业务。
+#### 3. App 中该类型消息的处理和UI显示
+以上步骤都实现之后，App 已经可以正常收发自定义消息了。
+这时候，App 可能需要按照自己的业务逻辑，做好这种消息的UI显示和处理工作。
+这部分是可选的，完全取决于 App 的业务。
 
 ### 集成IMKit扩展更多功能
-//TODO
+
 
 ### SDK错误码说明
 
