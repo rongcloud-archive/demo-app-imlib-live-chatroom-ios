@@ -6,8 +6,6 @@
 //  Copyright © 2016年 rongcloud. All rights reserved.
 //
 
-#ifndef __RCDLiveChatRoomViewController
-#define __RCDLiveChatRoomViewController
 #import <UIKit/UIKit.h>
 #import "RCDLiveMessageBaseCell.h"
 #import "RCDLiveMessageModel.h"
@@ -70,7 +68,7 @@
 
 #pragma mark - 输入工具栏
 
-@property(nonatomic,strong) RCDLiveInputBar *inputBar;
+@property(nonatomic,weak) RCDLiveInputBar *inputBar;
 
 #pragma mark - 显示设置
 /*!
@@ -82,4 +80,3 @@
 @property(nonatomic, assign) int defaultHistoryMessageCountOfChatRoom;
 
 @end
-#endif

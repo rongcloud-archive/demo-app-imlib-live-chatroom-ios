@@ -6,8 +6,6 @@
 //  Copyright (c) 2015年 RongCloud. All rights reserved.
 //
 
-#ifndef __RCDLiveMessageCellNotificationModel
-#define __RCDLiveMessageCellNotificationModel
 #import <UIKit/UIKit.h>
 
 // 消息Cell需要更新的状态名
@@ -41,4 +39,3 @@ UIKIT_EXTERN NSString *const RCDLiveCONVERSATION_CELL_STATUS_SEND_HASREAD;
 @property(nonatomic) NSInteger progress;
 
 @end
-#endif

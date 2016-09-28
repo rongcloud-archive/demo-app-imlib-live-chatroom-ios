@@ -284,7 +284,7 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
  *  回收的时候需要消耗播放器和退出聊天室
  */
 - (void)dealloc {
-    [self quitConversationViewAndClear];
+//    [self quitConversationViewAndClear];
 }
 
 /**
@@ -307,7 +307,7 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
                                                 self.conversationMessageCollectionView.dataSource = nil;
                                                 self.conversationMessageCollectionView.delegate = nil;
                                                 [[NSNotificationCenter defaultCenter] removeObserver:self];
-                                                [[RCIMClient sharedRCIMClient]disconnect];
+                                                [[RCDLive sharedRCDLive]logoutRongCloud];
                                                 dispatch_async(dispatch_get_main_queue(), ^{
                                                     [self.navigationController popViewControllerAnimated:YES];
                                                 });
@@ -453,7 +453,7 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
 
 -(void)showInputBar:(id)sender{
   self.inputBar.hidden = NO;
-  [self.inputBar setInputBarStatus:KBottomBarKeyboardStatus];
+  [self.inputBar setInputBarStatus:RCDLiveBottomBarKeyboardStatus];
 }
 
 /**
@@ -955,8 +955,7 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
  *
  *  @param imageMessageContent 图片消息内容
  */
-- (void)presentImagePreviewController:(RCDLiveMessageModel *)model;
-{
+- (void)presentImagePreviewController:(RCDLiveMessageModel *)model {
 }
 
 /**
@@ -1080,7 +1079,7 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
 //        CGRect collectionViewRect = self.conversationMessageCollectionView.frame;
 //        collectionViewRect.size.height = self.contentView.bounds.size.height - 0;
 //        [self.conversationMessageCollectionView setFrame:collectionViewRect];
-        [self.inputBar setInputBarStatus:KBottomBarDefaultStatus];
+        [self.inputBar setInputBarStatus:RCDLiveBottomBarDefaultStatus];
         self.inputBar.hidden = YES;
     }
 }

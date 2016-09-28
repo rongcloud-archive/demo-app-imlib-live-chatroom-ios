@@ -6,9 +6,6 @@
 //  Copyright (c) 2015年 RongCloud. All rights reserved.
 //
 
-#ifndef RongIMKit_RCDLiveKitCommonDefine_h
-#define RongIMKit_RCDLiveKitCommonDefine_h
-
 #define USE_BUNDLE_RESOUCE 1
 
 #define RONGCLOUD_IM_APPKEY @"e5t4ouvptkm2a"
@@ -55,26 +52,7 @@ sizeWithFont:font constrainedToSize:maxSize lineBreakMode:mode] : CGSizeZero;
 #else
 #define RCDLive_DebugLog( s, ... )
 #endif
-#endif
 
-
-/*!
- 输入工具栏的输入模式
- */
-typedef NS_ENUM(NSInteger, KBottomBarStatus) {
-    /*!
-     初始状态
-     */
-    KBottomBarDefaultStatus = 0,
-    /*!
-     文本输入状态
-     */
-    KBottomBarKeyboardStatus,
-    /*!
-     表情输入模式
-     */
-    KBottomBarEmojiStatus
-};
 
 
 

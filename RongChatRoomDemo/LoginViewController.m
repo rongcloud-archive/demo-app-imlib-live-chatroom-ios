@@ -14,6 +14,7 @@
 #import "AFNetworking.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "AppDelegate.h"
+#import "RCDLive.h"
 
 
 @interface LoginViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate>
@@ -210,7 +211,7 @@
               NSString *token = responseObj[@"token"];
               NSString *userId = responseObj[@"userId"];
               
-              [[RCIMClient sharedRCIMClient] connectWithToken:token success:^(NSString *loginUserId) {
+              [[RCDLive sharedRCDLive] connectRongCloudWithToken:token success:^(NSString *loginUserId) {
                   dispatch_async(dispatch_get_main_queue(), ^{
                       RCUserInfo *user = [[RCUserInfo alloc]init];
                       user.userId = userId;

@@ -94,12 +94,13 @@ static RCDLive *__rongUIKit = nil;
                  success:(void (^)(NSString *userId))successBlock
                    error:(void (^)(RCConnectErrorCode status))errorBlock
           tokenIncorrect:(void (^)())tokenIncorrectBlock {
-
+    [[RCIMClient sharedRCIMClient] setRCConnectionStatusChangeDelegate:self];
     [[RCIMClient sharedRCIMClient] connectWithToken:token
         success:^(NSString *userId) {
             if (successBlock!=nil) {
                 successBlock(userId);
             }
+            [[RCIMClient sharedRCIMClient] setReceiveMessageDelegate:self object:nil];
         }
         error:^(RCConnectErrorCode status) {
             if(errorBlock!=nil)
@@ -116,20 +117,17 @@ static RCDLive *__rongUIKit = nil;
  *  @param isReceivePush 是否接收回调。
  */
 - (void)disconnectRongCloud:(BOOL)isReceivePush {
+    [[RCIMClient sharedRCIMClient] setReceiveMessageDelegate:nil object:nil];
+    [[RCIMClient sharedRCIMClient] setRCConnectionStatusChangeDelegate:nil];
     [[RCIMClient sharedRCIMClient] disconnect:isReceivePush];
-}
-
-/**
- *  断开连接。
- */
-- (void)disconnectRongCloud {
-    [[RCIMClient sharedRCIMClient] disconnect];
 }
 
 /**
  *  Log out。不会接收到push消息。
  */
 - (void)logoutRongCloud {
+    [[RCIMClient sharedRCIMClient] setReceiveMessageDelegate:nil object:nil];
+    [[RCIMClient sharedRCIMClient] setRCConnectionStatusChangeDelegate:nil];
     [[RCIMClient sharedRCIMClient] logout];
 }
 

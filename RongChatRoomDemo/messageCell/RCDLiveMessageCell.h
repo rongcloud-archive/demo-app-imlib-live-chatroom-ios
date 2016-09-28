@@ -6,16 +6,12 @@
 //  Copyright (c) 2015年 RongCloud. All rights reserved.
 //
 
-#ifndef __RCMessageCommonCell
-#define __RCMessageCommonCell
 #import "RCDLiveMessageBaseCell.h"
 #import "RCDLiveMessageCellNotificationModel.h"
 #import "RCDLiveMessageCellDelegate.h"
 #import "RCDLiveContentView.h"
 //#define PORTRAIT_WIDTH 45
 //#define PORTRAIT_HEIGHT 45
-
-@class RCloudImageView;
 
 /*!
  展示的消息Cell类
@@ -29,7 +25,7 @@
 ///*!
 //消息发送者的用户头像
 //*/
-//@property(nonatomic, strong) RCEmotionImageView *portraitImageView;
+//@property(nonatomic, strong) RCEmoticonImageView *portraitImageView;
 
 /*!
  消息发送者的用户名称
@@ -97,4 +93,3 @@
 - (void)updateStatusContentView:(RCDLiveMessageModel *)model;
 
 @end
-#endif

@@ -18,6 +18,24 @@
 #define PLUGIN_BOARD_ITEM_LOCATION_TAG 1003
 
 /*!
+ 输入工具栏的输入模式
+ */
+typedef NS_ENUM(NSInteger, RCDLiveBottomBarStatus) {
+  /*!
+   初始状态
+   */
+  RCDLiveBottomBarDefaultStatus = 0,
+  /*!
+   文本输入状态
+   */
+  RCDLiveBottomBarKeyboardStatus,
+  /*!
+   表情输入模式
+   */
+  RCDLiveBottomBarEmojiStatus
+};
+
+/*!
  输入工具栏的点击监听器
  */
 @protocol RCTKInputBarControlDelegate <NSObject>
@@ -83,7 +101,7 @@ shouldChangeTextInRange:(NSRange)range
  
  @param frame       显示的Frame
  */
--(void)setInputBarStatus:(KBottomBarStatus)Status;
+-(void)setInputBarStatus:(RCDLiveBottomBarStatus)Status;
 
 /*!
  重新调整页面布局时需要调用这个方法来设置输入框的frame

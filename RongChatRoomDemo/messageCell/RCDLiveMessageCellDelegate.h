@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 RongCloud. All rights reserved.
 //
 
-#ifndef RongIMKit_RCDLiveMessageCellDelegate_h
-#define RongIMKit_RCDLiveMessageCellDelegate_h
 #import "RCDLiveMessageModel.h"
 
 /*!
@@ -123,4 +121,3 @@
 - (void)didTapPublicServiceMessageFailedStatusViewForResend:(RCDLiveMessageModel *)model;
 
 @end
-#endif

@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 RongCloud. All rights reserved.
 //
 
-#ifndef __RCDLiveTipLabel
-#define __RCDLiveTipLabel
 #import <UIKit/UIKit.h>
 #import "RCDLiveAttributedLabel.h"
 
@@ -29,4 +27,3 @@
 + (instancetype)greyTipLabel;
 
 @end
-#endif

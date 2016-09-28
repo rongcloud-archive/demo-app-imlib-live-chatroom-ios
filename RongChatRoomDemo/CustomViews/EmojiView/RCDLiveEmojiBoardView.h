@@ -1,5 +1,5 @@
 //
-//  RCEmojiBoardView.h
+//  RCDLiveEmojiBoardView.h
 //  RCIM
 //
 //  Created by Heq.Shinoda on 14-5-29.

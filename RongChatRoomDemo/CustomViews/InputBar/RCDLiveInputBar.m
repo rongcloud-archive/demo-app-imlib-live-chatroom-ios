@@ -35,7 +35,7 @@
 /*!
  当前输入框状态
  */
-@property(nonatomic) KBottomBarStatus currentBottomBarStatus;
+@property(nonatomic) RCDLiveBottomBarStatus currentBottomBarStatus;
 
 /**
  *自定义扩展区域，此区域和表情以及加号扩展区域高度相同都为220
@@ -104,14 +104,14 @@
  *
  *  @param Status
  */
--(void)setInputBarStatus:(KBottomBarStatus)Status{
+-(void)setInputBarStatus:(RCDLiveBottomBarStatus)Status{
     [self animationLayoutBottomBarWithStatus:Status animated:YES];
 }
 
 -(void)changeInputBarFrame:(CGRect)frame{
     self.originalFrame = frame;
     [self setFrame:frame];
-    [self setInputBarStatus:KBottomBarDefaultStatus];
+    [self setInputBarStatus:RCDLiveBottomBarDefaultStatus];
     [self.chatSessionInputBarControl setFrame:CGRectMake(0, 0,
                                                          self.bounds.size.width,
                                                          frame.size.height)];
@@ -180,7 +180,7 @@
         [self setFrame:frame];
         [self.delegate onInputBarControlContentSizeChanged:frame withAnimationDuration:0.1 andAnimationCurve:0];
     }
-    [self animationLayoutBottomBarWithStatus:KBottomBarDefaultStatus animated:YES];
+    [self animationLayoutBottomBarWithStatus:RCDLiveBottomBarDefaultStatus animated:YES];
     self.currentFrame = self.frame;
     self.KeyboardFrame = CGRectZero;
     self.currentInputBarHeight = self.frame.size.height;
@@ -192,8 +192,8 @@
     _isClickAddButton = NO;
     _isClickEmojiButton = NO;
     if (switched) {
-        [self animationLayoutBottomBarWithStatus:KBottomBarDefaultStatus animated:YES];
-        if (_currentBottomBarStatus != KBottomBarDefaultStatus) {
+        [self animationLayoutBottomBarWithStatus:RCDLiveBottomBarDefaultStatus animated:YES];
+        if (_currentBottomBarStatus != RCDLiveBottomBarDefaultStatus) {
             [self.chatSessionInputBarControl.inputTextView resignFirstResponder];
         }
         
@@ -247,20 +247,20 @@ shouldChangeTextInRange:(NSRange)range
 }
 
 
-- (void)animationLayoutBottomBarWithStatus:(KBottomBarStatus)bottomBarStatus animated:(BOOL)animated{
-    if (bottomBarStatus == KBottomBarDefaultStatus) {
+- (void)animationLayoutBottomBarWithStatus:(RCDLiveBottomBarStatus)bottomBarStatus animated:(BOOL)animated{
+    if (bottomBarStatus == RCDLiveBottomBarDefaultStatus) {
         _isClickEmojiButton = NO;
         _isClickAddButton = NO;
     }
-    if (bottomBarStatus != KBottomBarEmojiStatus) {
+    if (bottomBarStatus != RCDLiveBottomBarEmojiStatus) {
         self.chatSessionInputBarControl.inputTextView.inputView = nil;
         [self.chatSessionInputBarControl.emojiButton setImage:RCDLive_IMAGE_BY_NAMED(@"chatting_biaoqing_btn_normal") forState:UIControlStateNormal];
     }
-    if (bottomBarStatus == KBottomBarEmojiStatus && !_emojiBoardView) {
+    if (bottomBarStatus == RCDLiveBottomBarEmojiStatus && !_emojiBoardView) {
         [self emojiBoardView];
     }
     
-    if (bottomBarStatus == KBottomBarKeyboardStatus) {
+    if (bottomBarStatus == RCDLiveBottomBarKeyboardStatus) {
         [self.chatSessionInputBarControl.inputTextView becomeFirstResponder];
     }
     if (animated == YES) {
@@ -277,8 +277,8 @@ shouldChangeTextInRange:(NSRange)range
     }
 }
 
-- (void)layoutBottomBarWithStatus:(KBottomBarStatus)bottomBarStatus {
-    if (bottomBarStatus != KBottomBarKeyboardStatus) {
+- (void)layoutBottomBarWithStatus:(RCDLiveBottomBarStatus)bottomBarStatus {
+    if (bottomBarStatus != RCDLiveBottomBarKeyboardStatus) {
         if (self.chatSessionInputBarControl.inputTextView.isFirstResponder) {
             [self.chatSessionInputBarControl.inputTextView resignFirstResponder];
         }
@@ -286,13 +286,13 @@ shouldChangeTextInRange:(NSRange)range
     
     CGRect chatInputBarRect = self.chatSessionInputBarControl.frame;
     switch (bottomBarStatus) {
-        case KBottomBarDefaultStatus: {
+        case RCDLiveBottomBarDefaultStatus: {
             CGRect frame = self.originalFrame;
             frame.origin.y = frame.origin.y - self.chatSessionInputBarControl.frame.size.height + Height_ChatSessionInputBar;
             frame.size.height += chatInputBarRect.size.height - Height_ChatSessionInputBar;
             [self setFrame:frame];
         } break;
-            //            case KBottomBarKeyboardStatus: {
+            //            case RCDLiveBottomBarKeyboardStatus: {
             //                CGRect frame = self.originalFrame;
             //                frame.origin.y = frame.origin.y - self.chatSessionInputBarControl.frame.size.height + Height_ChatSessionInputBar;
             //                frame.size.height += chatInputBarRect.size.height - Height_ChatSessionInputBar;
@@ -313,8 +313,7 @@ shouldChangeTextInRange:(NSRange)range
 }
 
 
-- (void)chatSessionInputBarControlContentSizeChanged:(CGRect)frame;
-{
+- (void)chatSessionInputBarControlContentSizeChanged:(CGRect)frame {
     CGRect chatInputBarRect = self.chatSessionInputBarControl.frame;
     chatInputBarRect.origin.y = 0;
     [self.chatSessionInputBarControl setFrame:chatInputBarRect];
@@ -355,7 +354,7 @@ shouldChangeTextInRange:(NSRange)range
         if (replaceString.length < 5000) {
             NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc]initWithString:replaceString];
             UIFont *font = [UIFont fontWithName:@"Heiti SC-Bold" size:16];
-            [attStr addAttribute:kCTFontAttributeName value:(id)CFBridgingRelease(CTFontCreateWithName((CFStringRef)font.fontName,
+            [attStr addAttribute:(__bridge NSString*)kCTFontAttributeName value:(id)CFBridgingRelease(CTFontCreateWithName((CFStringRef)font.fontName,
                                                                                                        16,
                                                                                                        NULL)) range:NSMakeRange(0, replaceString.length)];
             

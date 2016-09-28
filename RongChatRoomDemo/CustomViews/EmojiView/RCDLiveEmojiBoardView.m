@@ -126,7 +126,7 @@
     [sendBtn setTitle:NSLocalizedStringFromTable(@"Send", @"RongCloudKit", nil) forState:UIControlStateNormal];
     [sendBtn addTarget:self action:@selector(sendBtnHandle:) forControlEvents:UIControlEventTouchUpInside];
     [_tabbarView addSubview:sendBtn];
-    [self loadCustomerEmotionPackage];
+    [self loadCustomerEmoticonPackage];
 }
 
 - (void)enableSendButton:(BOOL)sender{
@@ -189,7 +189,7 @@
     self.emojiContentSize = self.emojiBackgroundView.contentSize;
 }
 
--(void)loadCustomerEmotionPackage{
+-(void)loadCustomerEmoticonPackage{
 
     if (_tabIconArray) {
         [_tabIconArray removeAllObjects];

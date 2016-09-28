@@ -42,7 +42,7 @@
     }else if ([content isMemberOfClass:[RCTextMessage class]]){
         RCTextMessage *notification = (RCTextMessage *)content;
         NSString *localizedMessage = [RCDLiveKitUtility formatMessage:notification];
-        NSString *name;
+        NSString *name=@"";
         if (content.senderUserInfo) {
             name = [NSString stringWithFormat:@"%@:",content.senderUserInfo.name];
         }
@@ -54,7 +54,7 @@
         self.tipMessageLabel.attributedText = attributedString.copy;
     }else if ([content isMemberOfClass:[RCDLiveGiftMessage class]]){
         RCDLiveGiftMessage *notification = (RCDLiveGiftMessage *)content;
-        NSString *name;
+        NSString *name=@"";
         if (content.senderUserInfo) {
             name = content.senderUserInfo.name;
         }

@@ -6,8 +6,6 @@
 //  Copyright (c) 2015年 RongCloud. All rights reserved.
 //
 
-#ifndef __RongUIKit
-#define __RongUIKit
 #import <Foundation/Foundation.h>
 #import <RongIMLib/RongIMLib.h>
 
@@ -224,5 +222,3 @@ FOUNDATION_EXPORT NSString *const RCDLiveKitDispatchMessageNotification;
  */
 @property(nonatomic, strong) RCUserInfo *currentUserInfo;
 @end
-
-#endif
