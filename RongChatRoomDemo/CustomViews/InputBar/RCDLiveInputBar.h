@@ -93,8 +93,7 @@ shouldChangeTextInRange:(NSRange)range
  
  @return            输入工具栏对象
  */
-- (id)initWithFrame:(CGRect)frame
-    inViewConroller:(UIViewController *)parentViewController;
+- (id)initWithFrame:(CGRect)frame;
 
 /*!
  设置输入工具栏状态

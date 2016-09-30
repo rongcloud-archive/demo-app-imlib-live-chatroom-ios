@@ -55,18 +55,15 @@
 
 @implementation RCDLiveInputBar
 
-- (id)initWithFrame:(CGRect)frame
-    inViewConroller:(UIViewController *)parentViewController{
+- (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
         self.KeyboardFrame =  CGRectZero;
-        self.parentViewController = parentViewController;
         _chatSessionInputBarControl = [[RCDLiveInputView alloc]
                                        initWithFrame:CGRectMake(0, 0,
                                                                 self.bounds.size.width,
-                                                                frame.size.height)
-                                       withContextView:parentViewController.view];
+                                                                frame.size.height)];
 
         _chatSessionInputBarControl.delegate = self;
         [self addSubview:_chatSessionInputBarControl];

@@ -76,8 +76,7 @@
  @param style       显示布局
  @return            输入工具栏对象
  */
-- (id)initWithFrame:(CGRect)frame
-    withContextView:(UIView *)contextView;
+- (id)initWithFrame:(CGRect)frame;
 
 - (void)resetInputBar;
 

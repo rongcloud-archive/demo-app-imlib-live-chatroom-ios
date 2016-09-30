@@ -45,13 +45,11 @@ typedef void (^RCTKAnimationCompletionBlock)(BOOL finished);
 
 @implementation RCDLiveInputView
 
-- (id)initWithFrame:(CGRect)frame
-    withContextView:(UIView *)contextView {
+- (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
         self.inputContainerSubViewConstraints = [[NSMutableArray alloc] init];
         [self resetInputBar];
-        _contextView = contextView;
         self.currentPositionY = frame.origin.y;
         self.originalPositionY = frame.origin.y;
         

@@ -68,7 +68,7 @@
 
 #pragma mark - 输入工具栏
 
-@property(nonatomic,weak) RCDLiveInputBar *inputBar;
+@property(nonatomic,strong) RCDLiveInputBar *inputBar;
 
 #pragma mark - 显示设置
 /*!
