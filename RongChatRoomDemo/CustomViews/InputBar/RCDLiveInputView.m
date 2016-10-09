@@ -327,21 +327,20 @@ typedef void (^RCTKAnimationCompletionBlock)(BOOL finished);
                      animations:^{
                          CGRect intputTextRect = self.inputTextView.frame;
                          intputTextRect.size.height = _inputTextview_height;
-                         //intputTextRect.origin.y = 7;
-                         [_inputTextView setFrame:intputTextRect];
-                         CGRect vRect = self.frame;
-                         vRect.size.height = Height_ChatSessionInputBar + (_inputTextview_height - 36);
-                         vRect.origin.y = _originalPositionY - (_inputTextview_height - 36);
-                         self.frame = vRect;
-                         CGRect rectFrame = self.inputContainerView.frame;
-                         rectFrame.size.height = vRect.size.height;
-                         self.inputContainerView.frame = rectFrame;
+                         intputTextRect.origin.y = 7;
+                         [self.inputTextView setFrame:intputTextRect];
+                         self.inputTextview_height =
+                         _inputTextview_height;
                          
-                         _currentPositionY = vRect.origin.y;
-                         [self.delegate chatSessionInputBarControlContentSizeChanged:vRect];
-                         if (_inputTextview_height>70.0) {
-                             textView.contentOffset=CGPointMake(0, 100);
-                         }
+                         CGRect vRect = self.frame;
+                         vRect.size.height =
+                         50 + (_inputTextview_height - 36);
+                         vRect.origin.y = self.originalPositionY -
+                         (_inputTextview_height - 36
+                          );
+                         self.frame = vRect;
+                         self.currentPositionY = vRect.origin.y;
+
                      }];
 }
 
