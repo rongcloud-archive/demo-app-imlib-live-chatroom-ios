@@ -325,21 +325,21 @@ typedef void (^RCTKAnimationCompletionBlock)(BOOL finished);
     float animateDuration = 0.5;
     [UIView animateWithDuration:animateDuration
                      animations:^{
-                         CGRect intputTextRect = self.inputTextView.frame;
-                         intputTextRect.size.height = _inputTextview_height;
-                         intputTextRect.origin.y = 7;
-                         [self.inputTextView setFrame:intputTextRect];
-                         self.inputTextview_height =
-                         _inputTextview_height;
-                         
-                         CGRect vRect = self.frame;
-                         vRect.size.height =
-                         50 + (_inputTextview_height - 36);
-                         vRect.origin.y = self.originalPositionY -
-                         (_inputTextview_height - 36
-                          );
-                         self.frame = vRect;
-                         self.currentPositionY = vRect.origin.y;
+//                         CGRect intputTextRect = self.inputTextView.frame;
+//                         intputTextRect.size.height = _inputTextview_height;
+//                         intputTextRect.origin.y = 7;
+//                         [self.inputTextView setFrame:intputTextRect];
+//                         self.inputTextview_height =
+//                         _inputTextview_height;
+//                         
+//                         CGRect vRect = self.frame;
+//                         vRect.size.height =
+//                         50 + (_inputTextview_height - 36);
+//                         vRect.origin.y = self.originalPositionY -
+//                         (_inputTextview_height - 36
+//                          );
+//                         self.frame = vRect;
+//                         self.currentPositionY = vRect.origin.y;
 
                      }];
 }
