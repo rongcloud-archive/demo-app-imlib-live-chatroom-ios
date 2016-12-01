@@ -11,7 +11,7 @@
 #import "RCDLiveKitUtility.h"
 #import "RCDLiveEmojiPageControl.h"
 
-#define RC_EMOJI_WIDTH 30
+#define RC_EMOJI_WIDTH 32
 #define RC_EMOTIONTAB_SIZE_HEIGHT 42
 #define RC_EMOTIONTAB_SIZE_WIDTH 42
 #define RC_EMOTIONTAB_ICON_SIZE 25
