@@ -29,13 +29,18 @@
 //#import "QINIULivePlaying.h"
 //#import "QCLOUDLivePlaying.h"
 
+#import "UIView+RCDDanmaku.h"
+#import "RCDDanmaku.h"
+#import "RCDDanmakuManager.h"
+#define kRandomColor [UIColor colorWithRed:arc4random_uniform(256) / 255.0 green:arc4random_uniform(256) / 255.0 blue:arc4random_uniform(256) / 255.0 alpha:1]
+
 //输入框的高度
 #define MinHeight_InputView 50.0f
 #define kBounds [UIScreen mainScreen].bounds.size
 @interface RCDLiveChatRoomViewController () <
 UICollectionViewDelegate, UICollectionViewDataSource,
 UICollectionViewDelegateFlowLayout, RCDLiveMessageCellDelegate, UIGestureRecognizerDelegate,
-UIScrollViewDelegate, UINavigationControllerDelegate,RCTKInputBarControlDelegate,RCConnectionStatusChangeDelegate>
+UIScrollViewDelegate, UINavigationControllerDelegate,RCTKInputBarControlDelegate,RCConnectionStatusChangeDelegate,UIAlertViewDelegate>
 
 @property(nonatomic, strong)RCDLiveCollectionViewHeader *collectionViewHeader;
 
@@ -195,6 +200,8 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
  */
 - (void)viewDidLoad {
     [super viewDidLoad];
+    //默认进行弹幕缓存，不过量加载弹幕，如果想要同时大批量的显示弹幕，设置为yes，弹幕就不会做弹道检测和缓存
+    RCDanmakuManager.isAllowOverLoad = NO;
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     self.userList = delegate.userList;
     //初始化UI
@@ -234,6 +241,25 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
          }];
     }
     
+}
+
+- (void)sendDanmaku:(NSString *)text {
+    if(!text || text.length == 0){
+        return;
+    }
+    RCDDanmaku *danmaku = [[RCDDanmaku alloc]init];
+    danmaku.contentStr = [[NSAttributedString alloc]initWithString:text attributes:@{NSForegroundColorAttributeName : kRandomColor}];
+    [self.liveView sendDanmaku:danmaku];
+}
+
+- (void)sendCenterDanmaku:(NSString *)text {
+    if(!text || text.length == 0){
+        return;
+    }
+    RCDDanmaku *danmaku = [[RCDDanmaku alloc]init];
+    danmaku.contentStr = [[NSAttributedString alloc]initWithString:text attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:218.0/255 green:178.0/255 blue:115.0/255 alpha:1]}];
+    danmaku.position = RCDDanmakuPositionCenterTop;
+    [self.liveView sendDanmaku:danmaku];
 }
 
 /**
@@ -278,13 +304,16 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
     [self.conversationMessageCollectionView
      addGestureRecognizer:_resetBottomTapGesture];
     
+    //退出页面，弹幕停止
+    [self.view stopDanmaku];
+    
 }
 
 /**
  *  回收的时候需要消耗播放器和退出聊天室
  */
 - (void)dealloc {
-//    [self quitConversationViewAndClear];
+    //    [self quitConversationViewAndClear];
 }
 
 /**
@@ -293,21 +322,30 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
  *  @param sender sender description
  */
 - (void)leftBarButtonItemPressed:(id)sender {
-    [self quitConversationViewAndClear];
+  UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:nil message:@"退出聊天室？" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+  [alertview show];
 }
 
-// 清理环境（退出讨论组、移除监听等）
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+  [self quitConversationViewAndClear];
+}
+
+// 清理环境（退出聊天室并断开融云连接）
 - (void)quitConversationViewAndClear {
     if (self.conversationType == ConversationType_CHATROOM) {
         if (self.livePlayingManager) {
             [self.livePlayingManager destroyPlaying];
         }
+      //退出聊天室
         [[RCIMClient sharedRCIMClient] quitChatRoom:self.targetId
                                             success:^{
                                                 self.conversationMessageCollectionView.dataSource = nil;
                                                 self.conversationMessageCollectionView.delegate = nil;
                                                 [[NSNotificationCenter defaultCenter] removeObserver:self];
+                                              
+                                            //断开融云连接，如果你退出聊天室后还有融云的其他通讯功能操作，可以不用断开融云连接，否则断开连接后需要重新connectWithToken才能使用融云的功能
                                                 [[RCDLive sharedRCDLive]logoutRongCloud];
+                                              
                                                 dispatch_async(dispatch_get_main_queue(), ^{
                                                     [self.navigationController popViewControllerAnimated:YES];
                                                 });
@@ -346,7 +384,7 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
     self.portraitsCollectionView.dataSource = self;
     self.portraitsCollectionView.backgroundColor = [UIColor clearColor];
     
-
+    
     [self.portraitsCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
 }
 
@@ -415,7 +453,7 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
                  action:@selector(leftBarButtonItemPressed:)
        forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_backBtn];
-
+    
     _feedBackBtn  = [UIButton buttonWithType:UIButtonTypeCustom];
     _feedBackBtn.frame = CGRectMake(10, self.view.frame.size.height - 45, 35, 35);
     UIImageView *clapImg = [[UIImageView alloc]
@@ -423,19 +461,19 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
     clapImg.frame = CGRectMake(0,0, 35, 35);
     [_feedBackBtn addSubview:clapImg];
     [_feedBackBtn addTarget:self
-                 action:@selector(showInputBar:)
-       forControlEvents:UIControlEventTouchUpInside];
+                     action:@selector(showInputBar:)
+           forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_feedBackBtn];
     
     _flowerBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _flowerBtn.frame = CGRectMake(self.view.frame.size.width-90, self.view.frame.size.height - 45, 35, 35);
     UIImageView *clapImg2 = [[UIImageView alloc]
-                            initWithImage:[UIImage imageNamed:@"giftIcon"]];
+                             initWithImage:[UIImage imageNamed:@"giftIcon"]];
     clapImg2.frame = CGRectMake(0,0, 35, 35);
     [_flowerBtn addSubview:clapImg2];
     [_flowerBtn addTarget:self
-                 action:@selector(flowerButtonPressed:)
-       forControlEvents:UIControlEventTouchUpInside];
+                   action:@selector(flowerButtonPressed:)
+         forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_flowerBtn];
     
     _clapBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -451,8 +489,8 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
 }
 
 -(void)showInputBar:(id)sender{
-  self.inputBar.hidden = NO;
-  [self.inputBar setInputBarStatus:RCDLiveBottomBarKeyboardStatus];
+    self.inputBar.hidden = NO;
+    [self.inputBar setInputBarStatus:RCDLiveBottomBarKeyboardStatus];
 }
 
 /**
@@ -464,7 +502,8 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
     RCDLiveGiftMessage *giftMessage = [[RCDLiveGiftMessage alloc]init];
     giftMessage.type = @"0";
     [self sendMessage:giftMessage pushContent:@""];
-  
+    NSString *text = [NSString stringWithFormat:@"%@ 送了一个钻戒",giftMessage.senderUserInfo.name];
+    [self sendDanmaku:text];
 }
 
 /**
@@ -476,6 +515,8 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
     RCDLiveGiftMessage *giftMessage = [[RCDLiveGiftMessage alloc]init];
     giftMessage.type = @"1";
     [self sendMessage:giftMessage pushContent:@""];
+    NSString *text = [NSString stringWithFormat:@"%@ 为主播点了赞",giftMessage.senderUserInfo.name];
+    [self sendDanmaku:text];
     [self praiseHeart];
 }
 
@@ -592,7 +633,7 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
 - (void)changeModel:(BOOL)isFullScreen {
     self.livePlayingManager.currentLiveView.frame = self.view.frame;
     _titleView.hidden = YES;
-   
+    
     self.conversationMessageCollectionView.backgroundColor = [UIColor clearColor];
     CGRect contentViewFrame = CGRectMake(0, self.view.bounds.size.height-237, self.view.bounds.size.width,237);
     self.contentView.frame = contentViewFrame;
@@ -600,7 +641,7 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
     _flowerBtn.frame = CGRectMake(self.view.frame.size.width-90, self.view.frame.size.height - 45, 35, 35);
     _clapBtn.frame = CGRectMake(self.view.frame.size.width-45, self.view.frame.size.height - 45, 35, 35);
     [self.view sendSubviewToBack:_liveView];
-
+    
     float inputBarOriginY = self.conversationMessageCollectionView.bounds.size.height + 30;
     float inputBarOriginX = self.conversationMessageCollectionView.frame.origin.x;
     float inputBarSizeWidth = self.contentView.frame.size.width;
@@ -819,9 +860,9 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
         RCDLiveGiftMessage *notification = (RCDLiveGiftMessage *)messageContent;
         localizedMessage = @"送了一个钻戒";
         if(notification && [notification.type isEqualToString:@"1"]){
-          localizedMessage = @"为主播点了赞";
+            localizedMessage = @"为主播点了赞";
         }
-      
+        
         NSString *name;
         if (messageContent.senderUserInfo) {
             name = messageContent.senderUserInfo.name;
@@ -877,6 +918,22 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
             [self scrollToBottomAnimated:YES];
             self.isNeedScrollToButtom=NO;
         }
+    }
+}
+
+- (void)sendReceivedDanmaku:(RCMessageContent *)messageContent {
+    if([messageContent isMemberOfClass:[RCInformationNotificationMessage class]]){
+        RCInformationNotificationMessage *msg = (RCInformationNotificationMessage *)messageContent;
+        //        [self sendDanmaku:msg.message];
+        [self sendCenterDanmaku:msg.message];
+    }else if ([messageContent isMemberOfClass:[RCTextMessage class]]){
+        RCTextMessage *msg = (RCTextMessage *)messageContent;
+        [self sendDanmaku:msg.content];
+    }else if([messageContent isMemberOfClass:[RCDLiveGiftMessage class]]){
+        RCDLiveGiftMessage *msg = (RCDLiveGiftMessage *)messageContent;
+        NSString *tip = [msg.type isEqualToString:@"0"]?@"送了一个钻戒":@"为主播点了赞";
+        NSString *text = [NSString stringWithFormat:@"%@ %@",msg.senderUserInfo.name,tip];
+        [self sendDanmaku:text];
     }
 }
 
@@ -960,7 +1017,7 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
 /**
  *  打开地理位置。开发者可以重写，自己根据经纬度打开地图显示位置。默认使用内置地图
  *
- *  @param locationMessageCotent 位置消息
+ *  @param locationMessageContent 位置消息
  */
 - (void)presentLocationViewController:
 (RCLocationMessage *)locationMessageContent {
@@ -1008,27 +1065,27 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
     }
     
     [[RCDLive sharedRCDLive] sendMessage:self.conversationType
-                          targetId:self.targetId
-                           content:messageContent
-                       pushContent:pushContent
-                          pushData:nil
-                           success:^(long messageId) {
-                               __weak typeof(&*self) __weakself = self;
-                               dispatch_async(dispatch_get_main_queue(), ^{
-                                   RCMessage *message = [[RCMessage alloc] initWithType:__weakself.conversationType
-                                                                               targetId:__weakself.targetId
-                                                                              direction:MessageDirection_SEND
-                                                                              messageId:messageId
-                                                                                content:messageContent];
-                                   if ([message.content isMemberOfClass:[RCDLiveGiftMessage class]] ) {
-                                       message.messageId = -1;//插入消息时如果id是-1不判断是否存在
-                                   }
-                                   [__weakself appendAndDisplayMessage:message];
-                                   [__weakself.inputBar clearInputView];
-                               });
-                           } error:^(RCErrorCode nErrorCode, long messageId) {
-                               [[RCIMClient sharedRCIMClient]deleteMessages:@[ @(messageId) ]];
-                           }];
+                                targetId:self.targetId
+                                 content:messageContent
+                             pushContent:pushContent
+                                pushData:nil
+                                 success:^(long messageId) {
+                                     __weak typeof(&*self) __weakself = self;
+                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                         RCMessage *message = [[RCMessage alloc] initWithType:__weakself.conversationType
+                                                                                     targetId:__weakself.targetId
+                                                                                    direction:MessageDirection_SEND
+                                                                                    messageId:messageId
+                                                                                      content:messageContent];
+                                         if ([message.content isMemberOfClass:[RCDLiveGiftMessage class]] ) {
+                                             message.messageId = -1;//插入消息时如果id是-1不判断是否存在
+                                         }
+                                         [__weakself appendAndDisplayMessage:message];
+                                         [__weakself.inputBar clearInputView];
+                                     });
+                                 } error:^(RCErrorCode nErrorCode, long messageId) {
+                                     [[RCIMClient sharedRCIMClient]deleteMessages:@[ @(messageId) ]];
+                                 }];
 }
 
 /**
@@ -1059,6 +1116,14 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
             }
         });
     }
+    if([NSThread isMainThread]){
+        [self sendReceivedDanmaku:rcMessage.content];
+    }else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self sendReceivedDanmaku:rcMessage.content];
+        });
+    }
+    
 }
 
 
@@ -1075,9 +1140,9 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
 - (void)tap4ResetDefaultBottomBarStatus:
 (UIGestureRecognizer *)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-//        CGRect collectionViewRect = self.conversationMessageCollectionView.frame;
-//        collectionViewRect.size.height = self.contentView.bounds.size.height - 0;
-//        [self.conversationMessageCollectionView setFrame:collectionViewRect];
+        //        CGRect collectionViewRect = self.conversationMessageCollectionView.frame;
+        //        collectionViewRect.size.height = self.contentView.bounds.size.height - 0;
+        //        [self.conversationMessageCollectionView setFrame:collectionViewRect];
         [self.inputBar setInputBarStatus:RCDLiveBottomBarDefaultStatus];
         self.inputBar.hidden = YES;
     }
@@ -1108,6 +1173,7 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
 - (void)onTouchSendButton:(NSString *)text{
     RCTextMessage *rcTextMessage = [RCTextMessage messageWithContent:text];
     [self sendMessage:rcTextMessage pushContent:nil];
+    [self sendDanmaku:rcTextMessage.content];
     //    [self.inputBar setInputBarStatus:KBottomBarDefaultStatus];
     //    [self.inputBar setHidden:YES];
 }
@@ -1138,7 +1204,7 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
         [UIView commitAnimations];
     }];
     CGRect inputbarRect = self.inputBar.frame;
-
+    
     inputbarRect.origin.y = self.contentView.frame.size.height -50;
     [self.inputBar setFrame:inputbarRect];
     [self.view bringSubviewToFront:self.inputBar];
@@ -1204,63 +1270,63 @@ static NSString *const RCDLiveGiftMessageCellIndentifier = @"RCDLiveGiftMessageC
 
 
 - (void)praiseHeart{
-  UIImageView *imageView = [[UIImageView alloc] init];
-  imageView.frame = CGRectMake(_clapBtn.frame.origin.x , _clapBtn.frame.origin.y - 49, 35, 35);
-  imageView.image = [UIImage imageNamed:@"heart"];
-  imageView.backgroundColor = [UIColor clearColor];
-  imageView.clipsToBounds = YES;
-  [self.view addSubview:imageView];
-  
-  
-  CGFloat startX = round(random() % 200);
-  CGFloat scale = round(random() % 2) + 1.0;
-  CGFloat speed = 1 / round(random() % 900) + 0.6;
-  int imageName = round(random() % 7);
-  NSLog(@"%.2f - %.2f -- %d",startX,scale,imageName);
-  
-  [UIView beginAnimations:nil context:(__bridge void *_Nullable)(imageView)];
-  [UIView setAnimationDuration:7 * speed];
-  
-  imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"heart%d.png",imageName]];
-  imageView.frame = CGRectMake(kBounds.width - startX, -100, 35 * scale, 35 * scale);
-  
-  [UIView setAnimationDidStopSelector:@selector(onAnimationComplete:finished:context:)];
-  [UIView setAnimationDelegate:self];
-  [UIView commitAnimations];
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.frame = CGRectMake(_clapBtn.frame.origin.x , _clapBtn.frame.origin.y - 49, 35, 35);
+    imageView.image = [UIImage imageNamed:@"heart"];
+    imageView.backgroundColor = [UIColor clearColor];
+    imageView.clipsToBounds = YES;
+    [self.view addSubview:imageView];
+    
+    
+    CGFloat startX = round(random() % 200);
+    CGFloat scale = round(random() % 2) + 1.0;
+    CGFloat speed = 1 / round(random() % 900) + 0.6;
+    int imageName = round(random() % 7);
+    NSLog(@"%.2f - %.2f -- %d",startX,scale,imageName);
+    
+    [UIView beginAnimations:nil context:(__bridge void *_Nullable)(imageView)];
+    [UIView setAnimationDuration:7 * speed];
+    
+    imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"heart%d.png",imageName]];
+    imageView.frame = CGRectMake(kBounds.width - startX, -100, 35 * scale, 35 * scale);
+    
+    [UIView setAnimationDidStopSelector:@selector(onAnimationComplete:finished:context:)];
+    [UIView setAnimationDelegate:self];
+    [UIView commitAnimations];
 }
 
 
 - (void)praiseGift{
-  UIImageView *imageView = [[UIImageView alloc] init];
-  imageView.frame = CGRectMake(_flowerBtn.frame.origin.x , _flowerBtn.frame.origin.y - 49, 35, 35);
-  imageView.image = [UIImage imageNamed:@"gift"];
-  imageView.backgroundColor = [UIColor clearColor];
-  imageView.clipsToBounds = YES;
-  [self.view addSubview:imageView];
-  
-  
-  CGFloat startX = round(random() % 200);
-  CGFloat scale = round(random() % 2) + 1.0;
-  CGFloat speed = 1 / round(random() % 900) + 0.6;
-  int imageName = round(random() % 2);
-  NSLog(@"%.2f - %.2f -- %d",startX,scale,imageName);
-  
-  [UIView beginAnimations:nil context:(__bridge void *_Nullable)(imageView)];
-  [UIView setAnimationDuration:7 * speed];
-  
-  imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"gift%d.png",imageName]];
-  imageView.frame = CGRectMake(kBounds.width - startX, -100, 35 * scale, 35 * scale);
-  
-  [UIView setAnimationDidStopSelector:@selector(onAnimationComplete:finished:context:)];
-  [UIView setAnimationDelegate:self];
-  [UIView commitAnimations];
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.frame = CGRectMake(_flowerBtn.frame.origin.x , _flowerBtn.frame.origin.y - 49, 35, 35);
+    imageView.image = [UIImage imageNamed:@"gift"];
+    imageView.backgroundColor = [UIColor clearColor];
+    imageView.clipsToBounds = YES;
+    [self.view addSubview:imageView];
+    
+    
+    CGFloat startX = round(random() % 200);
+    CGFloat scale = round(random() % 2) + 1.0;
+    CGFloat speed = 1 / round(random() % 900) + 0.6;
+    int imageName = round(random() % 2);
+    NSLog(@"%.2f - %.2f -- %d",startX,scale,imageName);
+    
+    [UIView beginAnimations:nil context:(__bridge void *_Nullable)(imageView)];
+    [UIView setAnimationDuration:7 * speed];
+    
+    imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"gift%d.png",imageName]];
+    imageView.frame = CGRectMake(kBounds.width - startX, -100, 35 * scale, 35 * scale);
+    
+    [UIView setAnimationDidStopSelector:@selector(onAnimationComplete:finished:context:)];
+    [UIView setAnimationDelegate:self];
+    [UIView commitAnimations];
 }
 
 
 - (void)onAnimationComplete:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context{
-  
-  UIImageView *imageView = (__bridge UIImageView *)(context);
-  [imageView removeFromSuperview];
+    
+    UIImageView *imageView = (__bridge UIImageView *)(context);
+    [imageView removeFromSuperview];
 }
 
 

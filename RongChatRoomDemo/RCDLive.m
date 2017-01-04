@@ -15,7 +15,7 @@
 #import <RongIMLib/RongIMLib.h>
 
 //如果您的APP中只使用融云的底层通讯库 IMLib ，请把IsUseRongCloudIMKit 设置成 0，如果使用 IMKit 请设置成 1
-//#define IsUseRongCloudIMKit 1
+#define IsUseRongCloudIMKit 0
 
 NSString *const RCDLiveKitDispatchMessageNotification = @"RCDLiveKitDispatchMessageNotification";
 NSString *const RCDLiveKitDispatchTypingMessageNotification = @"RCDLiveKitDispatchTypingMessageNotification";
@@ -24,11 +24,11 @@ NSString *const RCDLiveKitDispatchConnectionStatusChangedNotification = @"RCDLiv
 
 //使用 IMKit 需要放开注释的地方
 @interface RCDLive () <
-//#if !IsUseRongCloudIMKit
+#if !IsUseRongCloudIMKit
 RCIMClientReceiveMessageDelegate, RCConnectionStatusChangeDelegate
-//#else
-//RCIMReceiveMessageDelegate, RCIMConnectionStatusDelegate
-//#endif
+#else
+RCIMReceiveMessageDelegate, RCIMConnectionStatusDelegate
+#endif
 >
 @property(nonatomic, strong) NSString *appKey;
 
@@ -65,26 +65,20 @@ static RCDLive *__rongUIKit = nil;
     }
     
     self.appKey = appKey;
-    //使用 IMKit 需要放开注释的地方
-    if ([self isRCIMKitExist]) {
-//        [[RCIM sharedRCIM] initWithAppKey:appKey];
-//        [[RCIM sharedRCIM] setConnectionStatusDelegate:self];
-//        [[RCIM sharedRCIM] setReceiveMessageDelegate:self];
-    }else{
-        [[RCIMClient sharedRCIMClient] initWithAppKey:appKey];
-        // listen receive message
-        [[RCIMClient sharedRCIMClient] setReceiveMessageDelegate:self object:nil];
-        [[RCIMClient sharedRCIMClient] setRCConnectionStatusChangeDelegate:self];
-
-    }
+#if !IsUseRongCloudIMKit
+  [[RCIMClient sharedRCIMClient] initWithAppKey:appKey];
+  // listen receive message
+  [[RCIMClient sharedRCIMClient] setReceiveMessageDelegate:self object:nil];
+  [[RCIMClient sharedRCIMClient] setRCConnectionStatusChangeDelegate:self];
+# else
+  [[RCIM sharedRCIM] initWithAppKey:appKey];
+  [[RCIM sharedRCIM] setConnectionStatusDelegate:self];
+  [[RCIM sharedRCIM] setReceiveMessageDelegate:self];
+#endif
 }
 
-- (BOOL)isRCIMKitExist {
-    Class kitClass = NSClassFromString(@"RCIM");
-    if (kitClass) {
-        return YES;
-    }
-    return NO;
+- (void)disconnectRongCloud{
+  
 }
 
 - (void)registerRongCloudMessageType:(Class)messageClass {
@@ -94,13 +88,11 @@ static RCDLive *__rongUIKit = nil;
                  success:(void (^)(NSString *userId))successBlock
                    error:(void (^)(RCConnectErrorCode status))errorBlock
           tokenIncorrect:(void (^)())tokenIncorrectBlock {
-    [[RCIMClient sharedRCIMClient] setRCConnectionStatusChangeDelegate:self];
     [[RCIMClient sharedRCIMClient] connectWithToken:token
         success:^(NSString *userId) {
             if (successBlock!=nil) {
                 successBlock(userId);
             }
-            [[RCIMClient sharedRCIMClient] setReceiveMessageDelegate:self object:nil];
         }
         error:^(RCConnectErrorCode status) {
             if(errorBlock!=nil)

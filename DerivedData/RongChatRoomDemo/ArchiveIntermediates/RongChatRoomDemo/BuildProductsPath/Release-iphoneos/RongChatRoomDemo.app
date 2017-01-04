@@ -1,0 +1,1 @@
+/Users/dulizhao/GitHub/ownCloud/live-chatroom-ios/DerivedData/RongChatRoomDemo/ArchiveIntermediates/RongChatRoomDemo/InstallationBuildProductsLocation/Applications/RongChatRoomDemo.app

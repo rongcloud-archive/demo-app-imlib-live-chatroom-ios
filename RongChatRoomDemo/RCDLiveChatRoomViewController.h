@@ -20,7 +20,7 @@
 #endif
 
 /*!
- 聊天界面类
+ 会话页面类
  */
 @interface RCDLiveChatRoomViewController: UIViewController
 <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, UIScrollViewDelegate>
@@ -47,7 +47,7 @@
  */
 @property(nonatomic, strong) NSString *contentURL;
 
-#pragma mark - 聊天界面属性
+#pragma mark - 会话页面属性
 
 /*!
  聊天内容的消息Cell数据模型的数据源
@@ -62,7 +62,7 @@
 @property(nonatomic, strong) UIView *contentView;
 
 /*!
- 聊天界面的CollectionView
+ 会话页面的CollectionView
  */
 @property(nonatomic, strong) UICollectionView *conversationMessageCollectionView;
 

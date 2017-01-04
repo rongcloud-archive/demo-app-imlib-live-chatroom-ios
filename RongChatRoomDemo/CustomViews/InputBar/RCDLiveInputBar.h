@@ -86,7 +86,7 @@ shouldChangeTextInRange:(NSRange)range
  初始化输入工具栏
  
  @param frame       显示的Frame
- @param inViewConroller 所处的聊天界面ViewConroller
+ @param inViewConroller 所处的会话页面ViewConroller
  @param type        菜单类型
  @defultInputType   输入框的默认输入模式,默认值为RCChatSessionInputBarInputText，即文本输入模式。
  @param style       显示布局

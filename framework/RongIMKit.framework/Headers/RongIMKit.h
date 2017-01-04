@@ -44,6 +44,8 @@ FOUNDATION_EXPORT const unsigned char RongIMKitVersionString[];
 #import <RongIMKit/RCMessageModel.h>
 #import <RongIMKit/RCMessageCellNotificationModel.h>
 #import <RongIMKit/RCImageMessageProgressView.h>
+#import <RongIMKit/RCFileMessageCell.h>
+
 /// 工具类
 #import <RongIMKit/RCKitUtility.h>
 #import <RongIMKit/RCThemeDefine.h>
@@ -57,4 +59,6 @@ FOUNDATION_EXPORT const unsigned char RongIMKitVersionString[];
 #import <RongIMKit/RCSettingViewController.h>
 #import <RongIMKit/RCConversationSettingTableViewHeader.h>
 #import <RongIMKit/RCPublicServiceProfileViewController.h>
+#import <RongIMKit/RongIMKitExtensionModule.h>
+#import <RongIMKit/RCEmoticonTabSource.h>
 /// VoIPCall

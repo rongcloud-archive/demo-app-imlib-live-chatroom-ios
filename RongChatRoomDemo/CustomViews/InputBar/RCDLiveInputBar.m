@@ -28,7 +28,7 @@
 @property(nonatomic, assign) BOOL isAudioRecoderTimeOut;
 @property(nonatomic) float currentInputBarHeight;
 /*!
- 聊天界面下方的输入工具栏
+ 会话页面下方的输入工具栏
  */
 @property(nonatomic, strong) RCDLiveInputView *chatSessionInputBarControl;
 

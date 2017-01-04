@@ -48,7 +48,7 @@
 @property(strong, nonatomic) UIButton *emojiButton;
 
 /*!
- 所处的聊天界面View
+ 所处的会话页面View
  */
 @property(assign, nonatomic, readonly) UIView *contextView;
 
@@ -71,7 +71,7 @@
  初始化输入工具栏
  
  @param frame       显示的Frame
- @param contextView 所处的聊天界面View
+ @param contextView 所处的会话页面View
  @param type        菜单类型
  @param style       显示布局
  @return            输入工具栏对象
