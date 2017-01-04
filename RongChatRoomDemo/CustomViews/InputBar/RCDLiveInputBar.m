@@ -390,24 +390,7 @@ shouldChangeTextInRange:(NSRange)range
                 [UIView animateWithDuration:animateDuration
                                  animations:^{
                                      
-                                     CGRect intputTextRect = _chatSessionInputBarControl.inputTextView.frame;
-                                     intputTextRect.size.height = _inputTextview_height;
-                                     intputTextRect.origin.y = 7;
-                                     [_chatSessionInputBarControl.inputTextView setFrame:intputTextRect];
-                                     _chatSessionInputBarControl.inputTextview_height =
-                                     _inputTextview_height;
-                                     
-                                     CGRect vRect = _chatSessionInputBarControl.frame;
-                                     vRect.size.height =
-                                     Height_ChatSessionInputBar + (_inputTextview_height - 36);
-                                     vRect.origin.y = _chatSessionInputBarControl.originalPositionY -
-                                     (_inputTextview_height - 36
-                                      );
-                                     _chatSessionInputBarControl.frame = vRect;
-                                     _chatSessionInputBarControl.currentPositionY = vRect.origin.y;
-                                     
-                                     [self chatSessionInputBarControlContentSizeChanged:vRect];
-                                 }];
+                                }];
             }
         }
     }
